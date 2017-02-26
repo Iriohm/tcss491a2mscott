@@ -1,8 +1,7 @@
 var LINE_WIDTH = 2;
 var ID = 0;
 
-function Node(game, type, color) {
-	this.type = type;
+function Node(game, color) {
 	this.color = color;
 	this.radius = 20
     this.speed = 100;
@@ -40,10 +39,16 @@ Node.prototype.update = function () {
 		if	(this.ID !== other.ID) {
 			var other = this.game.entities[i];
 			
-			for	(var b = 0; b < this.type.length; b++) {
-				this.type[b](this, other);
-				
-			}
+			switch(this.color) {
+					case 'blue':
+						behavior_bounce(this, other);
+						break;
+					case 'red':
+						behavior_seek(this, other);
+						break;
+					default:
+						break;
+				}
 			
 		}
 			

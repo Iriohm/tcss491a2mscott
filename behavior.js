@@ -1,5 +1,3 @@
-var type_basic = {behavior_bounce};
-
 // Behavior for bouncing against other entities
 function behavior_bounce(that, other) {
 	var x = other.x - that.x;
@@ -15,8 +13,8 @@ function behavior_bounce(that, other) {
 }
 
 
-// Behavior for gravity
-function behavior_split(that, other) {
+// Behavior for seeking out other Nodes
+function behavior_seeker(that, other) {
 	
 	
 }
