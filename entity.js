@@ -40,7 +40,7 @@ Node.prototype.update = function () {
 			var other = this.game.entities[i];
 			
 			switch(this.color) {
-					case 'blue':
+					case 'green':
 						behavior_bounce(this, other);
 						break;
 					case 'red':

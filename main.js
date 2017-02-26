@@ -10,13 +10,13 @@ AM.downloadAll(function () {
     gameEngine.init(ctx);
     gameEngine.start();
 
-	gameEngine.addEntity(new Node(gameEngine, 'blue'));
-	gameEngine.addEntity(new Node(gameEngine, 'blue'));
-	gameEngine.addEntity(new Node(gameEngine, 'blue'));
-	gameEngine.addEntity(new Node(gameEngine, 'blue'));
-	gameEngine.addEntity(new Node(gameEngine, 'blue'));
-	gameEngine.addEntity(new Node(gameEngine, 'blue'));
-	gameEngine.addEntity(new Node(gameEngine, 'blue'));
+	gameEngine.addEntity(new Node(gameEngine, 'green'));
+	gameEngine.addEntity(new Node(gameEngine, 'green'));
+	gameEngine.addEntity(new Node(gameEngine, 'green'));
+	gameEngine.addEntity(new Node(gameEngine, 'green'));
+	gameEngine.addEntity(new Node(gameEngine, 'green'));
+	gameEngine.addEntity(new Node(gameEngine, 'green'));
+	gameEngine.addEntity(new Node(gameEngine, 'green'));
 	
     console.log("All Done!");
 });
