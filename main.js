@@ -16,7 +16,6 @@ AM.downloadAll(function () {
 	gameEngine.addEntity(new Node(gameEngine, 'green'));
 	gameEngine.addEntity(new Node(gameEngine, 'green'));
 	gameEngine.addEntity(new Node(gameEngine, 'green'));
-	gameEngine.addEntity(new Node(gameEngine, 'green'));
 	
     console.log("All Done!");
 });

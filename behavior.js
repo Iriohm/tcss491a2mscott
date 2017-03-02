@@ -3,10 +3,12 @@ function behavior_bounce(that, other) {
 	var x = other.x - that.x;
 	var y = other.y - that.y;
 			
-	var distance = Math.sqrt(Math.pow(Math.abs(x), 2) + Math.pow(Math.abs(y), 2));
+	var distance = getDistance(that, other);
 			
-	if	(that.radius + other.radius >= distance) {
-		that.direction = getBounceAngle(that.direction, Math.atan2(y, x));
+	if	(that.radius + other.radius >= distance &&
+		 !that.isColliding && !other.isColliding) {
+		//that.direction = getBounceAngle(that.direction, Math.atan2(y, x));
+		that.direction = Math.atan2(y, x) + Math.PI;
 				
 	}
 	
@@ -14,8 +16,19 @@ function behavior_bounce(that, other) {
 
 
 // Behavior for seeking out other Nodes
-function behavior_seeker(that, other) {
+function behavior_seek(that, other) {
+	if	(typeof(that.nearest) === "undefined") {
+		that.nearest = other;
+		 
+	} else if	(Math.sqrt(Math.pow(Math.abs(other.x - that.x), 2)
+					     + Math.pow(Math.abs(other.y - that.y), 2)) < that.nearest.distance) {
+		that.nearest.x = other.x;
+		that.nearest.y = other.y;
+		that.nearest.distance = Math.sqrt(Math.pow(Math.abs(other.x - that.x), 2)
+										+ Math.pow(Math.abs(other.y - that.y), 2));
+	}
 	
+	that.direction = Math.atan2(other.y - that.y, other.x - that.x);
 	
 }
 
@@ -57,4 +70,10 @@ function getBounceAngle(incoming_direction, deflector_angle) {
 	
 	return outgoing_direction;
 	
+}
+
+function getDistance(that, other) {
+	var x = other.x - that.x;
+	var y = other.y - that.y;
+	return Math.sqrt(Math.pow(Math.abs(x), 2) + Math.pow(Math.abs(y), 2));
 }

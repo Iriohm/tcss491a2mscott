@@ -3,7 +3,7 @@ var ID = 0;
 
 function Node(game, color) {
 	this.color = color;
-	this.radius = 20
+	this.radius = 10
     this.speed = 100;
     this.game = game;
     this.ctx = game.ctx;
