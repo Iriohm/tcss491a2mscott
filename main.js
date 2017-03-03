@@ -9,13 +9,6 @@ AM.downloadAll(function () {
     var gameEngine = new GameEngine(AM.getAsset("./img/void.png"));
     gameEngine.init(ctx);
     gameEngine.start();
-
-	gameEngine.addEntity(new Node(gameEngine, 'green'));
-	gameEngine.addEntity(new Node(gameEngine, 'green'));
-	gameEngine.addEntity(new Node(gameEngine, 'green'));
-	gameEngine.addEntity(new Node(gameEngine, 'green'));
-	gameEngine.addEntity(new Node(gameEngine, 'green'));
-	gameEngine.addEntity(new Node(gameEngine, 'green'));
 	
     console.log("All Done!");
 });
