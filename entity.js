@@ -52,6 +52,9 @@ Node.prototype.update = function () {
 		case 'blue':
 			// Nothing
 			break;
+		case 'yellow':
+			behavior_split_before(this);
+			break;
 		default:
 			// Nothing
 			break;
@@ -76,6 +79,10 @@ Node.prototype.update = function () {
 						break;
 					case 'blue':
 						behavior_inert_loop(this, other);
+						break;
+					case 'yellow':
+						behavior_split_loop(this, other);
+						break;
 					default:
 						// Nothing
 						break;
@@ -98,6 +105,9 @@ Node.prototype.update = function () {
 			break;
 		case 'blue':
 			behavior_inert_after(this);
+			break;
+		case 'yellow':
+			// Nothing
 			break;
 		default:
 			// Nothing

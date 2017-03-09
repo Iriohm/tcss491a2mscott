@@ -96,6 +96,40 @@ function behavior_inert_after(that) {
 }
 
 
+// Behavior for splitting
+function behavior_split_before(that) {
+	if	(typeof(that.has_split) === "undefined") {
+		that.has_split = false;
+		
+	}
+	
+}
+
+function behavior_split_loop(that, other) {
+	if	(!that.has_split) {
+		if	(that.radius + other.radius >= getDistance(that, other) &&
+			!that.isColliding && !other.isColliding) {
+			
+			var iChildren = 4;
+			for (var i = 0; i < iChildren; i++) {
+				var child = new Node(that.game, that.color, that.speed * 1.5, that.radius / 2);
+				child.has_split = true;
+				child.x = that.x;
+				child.y = that.y;
+				child.type = that.type;
+				that.game.addEntity(child);
+			}
+			
+			that.has_split = true;
+			that.destroy = true;
+				
+		}
+				
+	}
+	
+}
+
+
 // Behavior for friction
 function behavior__before(that) {
 }
