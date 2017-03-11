@@ -1,5 +1,11 @@
 var LINE_WIDTH = 2;
 var ID = 0;
+var colors = ['white', 'red', 'green', 'blue', 'yellow', 'cyan'];
+
+function RAINBOW() {
+	return "rgb(" + red + ", " + green + ", " + blue + ")";
+
+}
 
 function Node(game, type, speed, radius) {
 	this.type = type;
@@ -22,12 +28,23 @@ function Node(game, type, speed, radius) {
 	// Destruction flag. Set to true to mark this entity for removal.
 	this.destroy = false;
 	
+	// Behavior-specific Variables
+	this.seek_distance = 9001;
+	this.seek_other_x = "undefined";
+	this.seek_other_y = "undefined";
+	this.original_speed = "undefined";
+	this.has_split = "undefined";
+	
 }
 
 Node.prototype.draw = function () {
     this.ctx.beginPath();
 	this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-	this.ctx.fillStyle = this.color;
+	if	(this.type === "RAINBOW") {
+		this.ctx.fillStyle = "rgb(" + this.game.red + ", " + this.game.green + ", " + this.game.blue + ")";
+	} else {
+		this.ctx.fillStyle = this.color;
+	}
 	this.ctx.fill();
 	this.ctx.lineWidth = LINE_WIDTH;
     this.ctx.strokeStyle = '#000000';
@@ -54,6 +71,12 @@ Node.prototype.update = function () {
 			break;
 		case 'yellow':
 			behavior_split_before(this);
+			break;
+		case 'cyan':
+			// Nothing
+			break;
+		case 'RAINBOW':
+			// Nothing
 			break;
 		default:
 			// Nothing
@@ -83,6 +106,13 @@ Node.prototype.update = function () {
 					case 'yellow':
 						behavior_split_loop(this, other);
 						break;
+					case 'cyan':
+						behavior_bounce_loop(this, other);
+						behavior_mirror_loop(this, other);
+						break;
+					case 'RAINBOW':
+						behavior_RAINBOW_loop(this, other);
+						break;
 					default:
 						// Nothing
 						break;
@@ -107,6 +137,12 @@ Node.prototype.update = function () {
 			behavior_inert_after(this);
 			break;
 		case 'yellow':
+			// Nothing
+			break;
+		case 'cyan':
+			// Nothing
+			break;
+		case 'RAINBOW':
 			// Nothing
 			break;
 		default:

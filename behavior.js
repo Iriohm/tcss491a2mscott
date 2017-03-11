@@ -19,8 +19,9 @@ function behavior_bounce_loop(that, other) {
 function behavior_eat_before(that) {
 	that.seek_distance = 9001;
 	
-	if	(typeof(that.seek_other) === "undefined") {
-		that.seek_other = that;
+	if	(that.seek_other_x === "undefined" || that.seek_other_y === "undefined") {
+		that.seek_other_x = that.x;
+		that.seek_other_y = that.y;
 		that.speed = 0;
 	}
 	
@@ -34,7 +35,8 @@ function behavior_eat_loop(that, other) {
 			var distance = getDistance(that, other);
 			
 			that.seek_distance = getDistance(that, other);
-			that.seek_other = other;
+			that.seek_other_x = other.x;
+			that.seek_other_y = other.y;
 			
 		}
 		
@@ -48,7 +50,7 @@ function behavior_eat_loop(that, other) {
 
 function behavior_eat_after(that) {
 	if	(!that.isColliding) {
-		that.direction = Math.atan2(-1 * (that.seek_other.y - that.y), that.seek_other.x - that.x);
+		that.direction = Math.atan2(-1 * (that.seek_other_y - that.y), that.seek_other_x - that.x);
 				
 	}
 	
@@ -57,7 +59,7 @@ function behavior_eat_after(that) {
 
 // Behavior for boosting speed for a short while upon collision
 function behavior_speedboost_before(that) {
-	if	(typeof(that.original_speed) === "undefined") {
+	if	(that.original_speed === "undefined") {
 		that.original_speed = that.speed;
 	}
 }
@@ -98,7 +100,7 @@ function behavior_inert_after(that) {
 
 // Behavior for splitting
 function behavior_split_before(that) {
-	if	(typeof(that.has_split) === "undefined") {
+	if	(that.has_split === "undefined") {
 		that.has_split = false;
 		
 	}
@@ -130,14 +132,47 @@ function behavior_split_loop(that, other) {
 }
 
 
-// Behavior for friction
-function behavior__before(that) {
+// Behavior for mirroring
+function behavior_mirror_loop(that, other) {
+	if	(that.radius + other.radius >= getDistance(that, other) &&
+		!that.isColliding && !other.isColliding) {
+			
+		for (var i = 0; i < that.game.entities.length; i++) {
+			var node = that.game.entities[i];
+			if	(node.type === that.type && !node.isColliding) {
+				node.direction = that.direction;
+				node.speed = that.speed;
+			}
+			
+		}
+				
+	}
+	
 }
 
-function behavior__loop(that, other) {
-}
 
-function behavior__after(that) {
+// Behavior for RAINBOW
+function behavior_RAINBOW_loop(that, other) {
+	var x = other.x - that.x;
+	var y = other.y - that.y;
+			
+	var distance = getDistance(that, other);
+			
+	if	(that.radius + other.radius >= distance &&
+		 !that.isColliding && !other.isColliding) {
+		that.x = Math.random() * (that.game.surfaceWidth - 50 - (2 * (that.radius + 10))) + that.radius + 10;
+		that.y = Math.random() * (that.game.surfaceHeight - (2 * (that.radius + 10))) + that.radius + 10;
+		that.direction = Math.random() * (Math.PI * 2);
+		
+		if	(other.type !== "RAINBOW") {	
+			var chaos = colors[Math.floor(Math.random() * colors.length)];
+			other.type = chaos;
+			other.color = chaos;
+		
+		}
+				
+	}
+	
 }
 
 

@@ -15,6 +15,10 @@ function GameEngine(background) {
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+	this.red = 0;
+	this.green = 0;
+	this.blue = 0;
+	this.color_up = true;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -57,8 +61,24 @@ GameEngine.prototype.draw = function () {
         this.entities[i].draw(this.ctx);
     }
 	
+	var increment = 25;
+	if	(this.color_up) { 
+		if	(this.red + increment < 256) { this.red += increment; }
+		else if	(this.green + increment < 256) { this.green += increment; }
+		else if	(this.blue + increment < 256) { this.blue += increment; }
+		else { this.color_up = false; }
+	} else {
+		if	(this.red - increment > 0) { this.red -= increment; }
+		else if	(this.green - increment > 0) { this.green -= increment; }
+		else if	(this.blue - increment > 0) { this.blue -= increment; }
+		else { this.color_up = true; }
+		
+	}
+		
+	
 	this.ctx.lineWidth = LINE_WIDTH;
     this.ctx.strokeStyle = '#000000';
+	this.ctx.font = "italic 14px Arial";
 	
 	// Insert buttons here
 		// White Button
@@ -101,23 +121,23 @@ GameEngine.prototype.draw = function () {
 		this.ctx.stroke();
 		this.ctx.closePath();
 		
-		// Unused
+		// Cyan Button
 		this.ctx.beginPath();
 		this.ctx.rect(this.surfaceWidth - 46, 254, 42, 42);
-		this.ctx.fillStyle = 'gray';
+		this.ctx.fillStyle = 'cyan';
 		this.ctx.fill();
 		this.ctx.stroke();
 		this.ctx.closePath();
 		
-		// Unused
+		// RAINBOW Button
 		this.ctx.beginPath();
 		this.ctx.rect(this.surfaceWidth - 46, 304, 42, 42);
-		this.ctx.fillStyle = 'gray';
+		this.ctx.fillStyle = "rgb(" + this.red + ", " + this.green + ", " + this.blue + ")";
 		this.ctx.fill();
 		this.ctx.stroke();
 		this.ctx.closePath();
 		
-		// Unused
+		// Save Button
 		this.ctx.beginPath();
 		this.ctx.rect(this.surfaceWidth - 46, 354, 42, 42);
 		this.ctx.fillStyle = 'gray';
@@ -125,12 +145,22 @@ GameEngine.prototype.draw = function () {
 		this.ctx.stroke();
 		this.ctx.closePath();
 		
-		// Unused
+		this.ctx.beginPath();
+		this.ctx.fillStyle = 'black';
+		this.ctx.fillText("SAVE", this.surfaceWidth - 44, 378);
+		this.ctx.closePath();
+		
+		// Load Button
 		this.ctx.beginPath();
 		this.ctx.rect(this.surfaceWidth - 46, 404, 42, 42);
 		this.ctx.fillStyle = 'gray';
 		this.ctx.fill();
 		this.ctx.stroke();
+		this.ctx.closePath();
+		
+		this.ctx.beginPath();
+		this.ctx.fillStyle = 'black';
+		this.ctx.fillText("LOAD", this.surfaceWidth - 44, 428);
 		this.ctx.closePath();
 		
 		// Clear Button
@@ -176,6 +206,53 @@ GameEngine.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     this.update();
     this.draw();
+}
+
+GameEngine.prototype.getState = function () {
+	var output = [];
+	output.push(ID);
+	
+	for	(var i = 0; i < this.entities.length; i++) {
+		var node = this.entities[i];
+		var data = [node.type, node.color, node.radius, node.speed, node.x, node.y, 
+					node.ID, node.direction, node.isColliding, node.destroy, 
+					node.seek_distance, node.seek_other_x, node.seek_other_y, node.original_speed, node.has_split];
+					
+		output.push(data);
+		
+	}
+	
+	console.log("Returning " + output);
+	return output;
+	
+}
+
+GameEngine.prototype.setState = function (input) {
+	ID = input[0];
+	this.entities = [];
+	
+	for	(var i = 1; i < input.length; i++) {
+		var data = input[i];
+		console.log("Loading " + data);
+		var node = new Node(this, data[0], data[3], data[2]);
+		
+		node.color = data[1];
+		node.x = data[4];
+		node.y = data[5];
+		node.ID = data[6];
+		node.direction = data[7];
+		node.isColliding = data[8];
+		node.destroy = data[9];
+		node.seek_distance = data[10];
+		node.seek_other_x = data[11];
+		node.seek_other_y = data[12];
+		node.original_speed = data[13];
+		node.has_split = data[14];
+		
+		this.entities.push(node);
+		
+	}
+	
 }
 
 function Timer() {
@@ -234,13 +311,18 @@ function clickButton(game, x, y) {
 			// Yellow Button
 			game.addEntity(new Node(game, 'yellow', 100, 15));
 		} else if	(254 <= y && y <= 296) {
-			// Unused
+			// Cyan Button
+			game.addEntity(new Node(game, 'cyan', 100, 15));
 		} else if	(304 <= y && y <= 346) {
-			// Unused
+			// RAINBOW Button
+			game.addEntity(new Node(game, 'RAINBOW', 100, 15));
 		} else if	(354 <= y && y <= 396) {
-			// Unused
+			// Save Button
+			var data = game.getState();
+			socket.emit("save", { studentname: "iriohm", statename: "saved_state", data: data });
 		} else if	(404 <= y && y <= 446) {
-			// Unused
+			// Load Button
+			socket.emit("load", { studentname: "iriohm", statename: "saved_state" });
 		} else if	(454 <= y && y <= 496) {
 			// Clear Entities
 			game.entities.splice(0, game.entities.length);
