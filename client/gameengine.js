@@ -318,11 +318,13 @@ function clickButton(game, x, y) {
 			game.addEntity(new Node(game, 'RAINBOW', 100, 15));
 		} else if	(354 <= y && y <= 396) {
 			// Save Button
-			var data = game.getState();
-			socket.emit("save", { studentname: "iriohm", statename: "saved_state", data: data });
+			// Does nothing now. Instructor took the database down.
+			//var data = game.getState();
+			//socket.emit("save", { studentname: "iriohm", statename: "saved_state", data: data });
 		} else if	(404 <= y && y <= 446) {
 			// Load Button
-			socket.emit("load", { studentname: "iriohm", statename: "saved_state" });
+			// Does nothing now. Instructor took the database down.
+			//socket.emit("load", { studentname: "iriohm", statename: "saved_state" });
 		} else if	(454 <= y && y <= 496) {
 			// Clear Entities
 			game.entities.splice(0, game.entities.length);
